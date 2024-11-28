@@ -1,7 +1,6 @@
 package med.voll.web_application.domain.consulta;
 
 import jakarta.persistence.*;
-import med.voll.web_application.controller.PacienteController;
 import med.voll.web_application.domain.medico.Medico;
 import med.voll.web_application.domain.paciente.Paciente;
 
@@ -23,8 +22,10 @@ public class Consulta {
     private Paciente paciente;
 
     private LocalDateTime data;
+
     @Deprecated
-    public Consulta(){}
+    public Consulta() {
+    }
 
     public Consulta(Medico medico, Paciente paciente, DadosAgendamentoConsulta dados) {
         modificarDados(medico, paciente, dados);
@@ -35,6 +36,7 @@ public class Consulta {
         this.paciente = paciente;
         this.data = dados.data();
     }
+
     public Long getId() {
         return id;
     }
