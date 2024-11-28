@@ -5,10 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -20,9 +18,9 @@ public class ConfiguracoesSeguranca {
     public SecurityFilterChain filtrosSeguranca(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(req -> {
-                     req.requestMatchers("/css/**", "/js/**", "/assets/**").permitAll();
-                     req.anyRequest().authenticated();
-        })
+                    req.requestMatchers("/css/**", "/js/**", "/assets/**").permitAll();
+                    req.anyRequest().authenticated();
+                })
                 .formLogin(form -> form.loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll())
@@ -33,5 +31,10 @@ public class ConfiguracoesSeguranca {
                         .alwaysRemember(true))
                 .csrf(Customizer.withDefaults())
                 .build();
+    }
+
+    @Bean
+    public PasswordEncoder codificadorSenha() {
+        return new BCryptPasswordEncoder();
     }
 }
