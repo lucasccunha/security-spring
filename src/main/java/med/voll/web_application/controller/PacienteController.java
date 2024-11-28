@@ -2,55 +2,53 @@ package med.voll.web_application.controller;
 
 import jakarta.validation.Valid;
 import med.voll.web_application.domain.RegraDeNegocioException;
-import med.voll.web_application.domain.consulta.ConsultaService;
-import med.voll.web_application.domain.consulta.DadosAgendamentoConsulta;
-import med.voll.web_application.domain.medico.Especialidade;
+import med.voll.web_application.domain.paciente.DadosCadastroPaciente;
+import med.voll.web_application.domain.paciente.PacienteService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("consultas")
-public class ConsultaController {
+@RequestMapping("pacientes")
+public class PacienteController {
 
-    private static final String PAGINA_LISTAGEM = "consulta/listagem-consultas";
-    private static final String PAGINA_CADASTRO = "consulta/formulario-consulta";
-    private static final String REDIRECT_LISTAGEM = "redirect:/consultas?sucesso";
+    private static final String PAGINA_LISTAGEM = "paciente/listagem-pacientes";
+    private static final String PAGINA_CADASTRO = "paciente/formulario-paciente";
+    private static final String REDIRECT_LISTAGEM = "redirect:/pacientes?sucesso";
 
-    private final ConsultaService service;
+    private final PacienteService service;
 
-    public ConsultaController(ConsultaService consultaService) {
-        this.service = consultaService;
-    }
-
-    @ModelAttribute("especialidades")
-    public Especialidade[] especialidades() {
-        return Especialidade.values();
+    public PacienteController(PacienteService service) {
+        this.service = service;
     }
 
     @GetMapping
     public String carregarPaginaListagem(@PageableDefault Pageable paginacao, Model model) {
-        var consultasAtivas = service.listar(paginacao);
-        model.addAttribute("consultas", consultasAtivas);
+        var pacientesCadastrados = service.listar(paginacao);
+        model.addAttribute("pacientes", pacientesCadastrados);
         return PAGINA_LISTAGEM;
     }
 
     @GetMapping("formulario")
-    public String carregarPaginaAgendaConsulta(Long id, Model model) {
+    public String carregarPaginaCadastro(Long id, Model model) {
         if (id != null) {
             model.addAttribute("dados", service.carregarPorId(id));
         } else {
-            model.addAttribute("dados", new DadosAgendamentoConsulta(null, null, null, null, null));
+            model.addAttribute("dados", new DadosCadastroPaciente(null, "", "", "", ""));
         }
 
         return PAGINA_CADASTRO;
     }
 
     @PostMapping
-    public String cadastrar(@Valid @ModelAttribute("dados") DadosAgendamentoConsulta dados, BindingResult result, Model model) {
+    public String cadastrar(@Valid @ModelAttribute("dados") DadosCadastroPaciente dados, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("dados", dados);
             return PAGINA_CADASTRO;

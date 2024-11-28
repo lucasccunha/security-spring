@@ -18,7 +18,7 @@ public class ConfiguracoesSeguranca {
     public SecurityFilterChain filtrosSeguranca(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/css/**", "/js/**", "/assets/**").permitAll();
+                    req.requestMatchers("/css/**", "/js/**", "/assets/**", "/", "/index", "/home").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .formLogin(form -> form.loginPage("/login")
@@ -28,7 +28,8 @@ public class ConfiguracoesSeguranca {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll())
                 .rememberMe(rememberMe -> rememberMe.key("lembrarDeMim")
-                        .alwaysRemember(true))
+                        .alwaysRemember(true)
+                )
                 .csrf(Customizer.withDefaults())
                 .build();
     }
