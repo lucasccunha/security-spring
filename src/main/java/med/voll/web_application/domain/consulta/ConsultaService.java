@@ -48,6 +48,7 @@ public class ConsultaService {
 
     @Transactional
     public void excluir(Long id) {
+
         repository.deleteById(id);
     }
 

@@ -5,11 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name="usuarios")
 public class Usuario implements UserDetails {
 
     @Id
@@ -18,19 +19,19 @@ public class Usuario implements UserDetails {
     private String nome;
     private String email;
     private String senha;
-    private Boolean senhaAlterada;
+    private String token;
+    private LocalDateTime expiracaoToken;
 
     @Enumerated(EnumType.STRING)
     private Perfil perfil;
 
-    private Usuario() {}
+    private Usuario(){}
 
     public Usuario(String nome, String email, String senha, Perfil perfil) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.perfil = perfil;
-        this.senhaAlterada = false;
     }
 
     @Override
@@ -60,15 +61,23 @@ public class Usuario implements UserDetails {
         return perfil;
     }
 
-    public void alterarSenha(String senhaCriptografa) {
-        this.senha = senhaCriptografa;
+    public void alterarSenha(String senhaCriptografada) {
+        this.senha = senhaCriptografada;
     }
 
-    public Boolean getSenhaAlterada() {
-        return senhaAlterada;
+    public LocalDateTime getExpiracaoToken() {
+        return expiracaoToken;
     }
 
-    public void setSenhaAlterada(Boolean senhaAlterada) {
-        this.senhaAlterada = senhaAlterada;
+    public void setExpiracaoToken(LocalDateTime expiracaoToken) {
+        this.expiracaoToken = expiracaoToken;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

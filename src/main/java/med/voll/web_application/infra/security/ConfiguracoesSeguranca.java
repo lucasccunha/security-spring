@@ -18,13 +18,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @EnableMethodSecurity
 public class ConfiguracoesSeguranca {
 
-
     @Bean
-    public SecurityFilterChain filtrosSeguranca(HttpSecurity http, OncePerRequestFilter filtroAlteracaoSenha) throws Exception {
+    public SecurityFilterChain filtrosSeguranca(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/css/**", "/js/**", "/assets/**",
-                            "/", "/index", "/home").permitAll();
+                    req.requestMatchers("/css/**", "/js/**", "/assets/**", "/", "/index", "/home").permitAll();
 //                        req.requestMatchers("/pacientes/**").hasRole("ATENDENTE");
 //                        req.requestMatchers(HttpMethod.GET, "/medicos").hasAnyRole("ATENDENTE", "PACIENTE");
 //                        req.requestMatchers("/medicos/**").hasRole("ATENDENTE");
@@ -32,7 +30,6 @@ public class ConfiguracoesSeguranca {
 //                        req.requestMatchers(HttpMethod.PUT, "/consultas/**").hasAnyRole("ATENDENTE", "PACIENTE");
                     req.anyRequest().authenticated();
                 })
-                .addFilterBefore(filtroAlteracaoSenha, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form.loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll())
@@ -47,7 +44,7 @@ public class ConfiguracoesSeguranca {
     }
 
     @Bean
-    public PasswordEncoder codificadorSenha() {
+    public PasswordEncoder codificadorSenha(){
         return new BCryptPasswordEncoder();
     }
 }
